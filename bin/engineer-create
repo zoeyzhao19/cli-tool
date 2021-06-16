@@ -1,0 +1,36 @@
+#! /usr/bin/env node
+
+const program = require('commander')
+const clear = require("clear")
+program
+  .name("engineer create")
+  .usage('[project-name]')
+  program.parse(process.argv)
+// 当没有输入参数的时候给个提示
+if (program.args.length < 1) {
+  return program.help()
+}
+
+
+
+let params = program.args.slice(0)
+  if (params.length === 0 || !checkValidParams(params)) {
+    return program.help()
+  }
+  clear()
+  create(params[0])
+
+function checkValidParams (params) {
+  let valid_param_regx = /^[^\-]/
+  let match_items = params.filter(function(item) {
+    return valid_param_regx.test(item)
+  })
+  if (match_items.length === 0) {
+    return false
+  }
+  return true
+}
+
+async function create(projectName) {
+  await require(`../lib/operation/create`)(projectName);
+}
